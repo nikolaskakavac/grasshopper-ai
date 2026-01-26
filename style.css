@@ -342,11 +342,11 @@ body.dark-mode .input-container {
 }
 
 .input-btn, .send-btn {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     padding: 0;
     border-radius: 50%;
-    font-size: 24px;
+    font-size: 28px;
     border: none;
     cursor: pointer;
     background: linear-gradient(135deg, #4a7c2c 0%, #5a8c3a 100%);
@@ -372,11 +372,11 @@ body.dark-mode .input-container {
 
 #messageInput {
     flex: 1;
-    padding: 16px 20px;
-    font-size: 16px;
-    border-radius: 28px;
-    height: 56px;
-    border: 2.5px solid rgba(74, 124, 44, 0.25);
+    padding: 18px 24px;
+    font-size: 18px;
+    border-radius: 30px;
+    height: 62px;
+    border: 3px solid rgba(74, 124, 44, 0.25);
     background: white;
     color: #1a1a1a;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -387,13 +387,13 @@ body.dark-mode .input-container {
 body.dark-mode #messageInput {
     background: #2a2a2a;
     color: #f0f0f0;
-    border: 2.5px solid rgba(90, 140, 58, 0.35);
+    border: 3px solid rgba(90, 140, 58, 0.35);
 }
 
 #messageInput::placeholder {
     color: rgba(26, 26, 26, 0.6);
     font-weight: 500;
-    font-size: 15px;
+    font-size: 17px;
 }
 
 body.dark-mode #messageInput::placeholder {
@@ -1033,24 +1033,24 @@ body.dark-mode .personality-info {
     
     /* Enhanced Input Buttons for Mobile */
     .input-btn, .send-btn {
-        width: 52px;
-        height: 52px;
-        font-size: 26px;
+        width: 60px;
+        height: 60px;
+        font-size: 32px;
         border-radius: 50%;
         box-shadow: 0 8px 24px rgba(74, 124, 44, 0.4);
     }
     
     .input-btn:hover, .send-btn:hover {
-        transform: translateY(-4px) scale(1.1);
+        transform: translateY(-4px) scale(1.12);
         box-shadow: 0 12px 32px rgba(74, 124, 44, 0.5);
     }
     
     /* Enhanced Message Input for Mobile */
     #messageInput {
-        height: 58px;
-        padding: 16px 22px;
-        font-size: 17px;
-        border-radius: 29px;
+        height: 64px;
+        padding: 18px 26px;
+        font-size: 18px;
+        border-radius: 32px;
         border: 3px solid rgba(74, 124, 44, 0.3);
         box-shadow: 0 6px 16px rgba(74, 124, 44, 0.15);
     }
@@ -1059,8 +1059,12 @@ body.dark-mode .personality-info {
         border: 3px solid rgba(90, 140, 58, 0.4);
     }
     
+    #messageInput::placeholder {
+        font-size: 18px;
+    }
+    
     #messageInput:focus {
-        height: 58px;
+        height: 64px;
         box-shadow: 0 0 0 5px rgba(74, 124, 44, 0.2), 0 8px 24px rgba(74, 124, 44, 0.3);
         border-color: #4a7c2c;
         transform: translateY(-2px);
