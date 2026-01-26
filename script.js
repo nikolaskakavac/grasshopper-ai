@@ -182,16 +182,24 @@ async function sendMessage() {
         const data = await response.json();
         removeTyping();
         
+        if (!response.ok) {
+            console.error('API Error:', response.status, data);
+            addMessage('❌ Greška: ' + (data.error?.message || 'API ne odgovara ispravno'), false);
+            return;
+        }
+        
         if (data.candidates && data.candidates[0].content) {
             const botResponse = data.candidates[0].content.parts[0].text;
             addMessage(botResponse, false);
             playNotificationSound();
         } else {
-            addMessage('Nisam mogao da generišem odgovor.', false);
+            addMessage('Nisam mogao da generišem odgovor. Pokušaj ponovo.', false);
+            console.error('API Response:', data);
         }
     } catch (error) {
         removeTyping();
-        addMessage('Greška: ' + error.message, false);
+        console.error('Fetch Error:', error);
+        addMessage('❌ Greška konekcije: ' + error.message, false);
     }
 }
 
