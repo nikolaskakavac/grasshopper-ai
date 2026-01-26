@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4a7c2c">
+    <title>Grasshopper AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="chat-header">
+            <div class="header-top">
+                <h2>🦗 Grasshopper AI</h2>
+                <div class="header-buttons">
+                    <button id="searchBtn" class="header-btn" title="Pretraga">🔍</button>
+                    <button id="translatorBtn" class="header-btn" title="Prevod">🌐</button>
+                    <button id="personalityBtn" class="header-btn" title="Ličnost">🎭</button>
+                    <button id="statsBtn" class="header-btn" title="Statistika">📊</button>
+                    <button id="gameBtn" class="header-btn" title="Igrica">🎮</button>
+                    <button id="darkModeBtn" class="header-btn" title="Dark Mode">🌙</button>
+                    <button id="clearBtn" class="header-btn" title="Obriši chat">🗑️</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-bar">
+            <span>💬 <span id="messageCount">1</span></span>
+            <span>⏱️ <span id="chatTime">0s</span></span>
+        </div>
+        
+        <div class="chat-box" id="chatBox">
+            <div class="message bot-message">
+                <div class="message-content">
+                    <p>🦗 Ja sam Grasshopper AI. Kako mogu da ti pomognem?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <button id="voiceBtn" class="input-btn" title="Glas">🎤</button>
+            <input type="text" id="userInput" placeholder="Upiši poruku..." autocomplete="off">
+            <button id="sendBtn" class="send-btn">Pošalji</button>
+        </div>
+    </div>
+
+    <!-- Modali -->
+    <div id="statsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📊 Statistika Chata</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stat-item">
+                    <span>Poruke:</span>
+                    <strong id="statMessages">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Korisničke poruke:</span>
+                    <strong id="statUserMessages">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Bot poruke:</span>
+                    <strong id="statBotMessages">0</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Vreme chata:</span>
+                    <strong id="statChatTime">0s</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Prosečna dužina poruke:</span>
+                    <strong id="statAvgLength">0</strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="downloadBtn" class="btn-primary">💾 Preuzmi Chat</button>
+                <button id="copyBtn" class="btn-primary">📋 Kopiraj Sve</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameModal" class="modal">
+        <div class="modal-content modal-game">
+            <div class="modal-header">
+                <h3>🎮 Izbor Igre</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body game-body">
+                <div id="gameSelector" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                    <button id="selectJump" class="game-select-btn active">⬇️ Jump</button>
+                    <button id="selectFlappy" class="game-select-btn">🪁 Flappy</button>
+                </div>
+                <div id="gameContainer">
+                    <canvas id="gameCanvas"></canvas>
+                </div>
+                <div class="game-controls">
+                    <button id="gameStartBtn">Počni Igru</button>
+                    <div id="gameScore">Score: 0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔍 Pretraga</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchInput" placeholder="Pretraži poruke..." class="search-input">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translator Modal -->
+    <div id="translatorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🌐 Prevodilac</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <select id="translatorLang" class="translator-select">
+                    <option value="en">English</option>
+                    <option value="sr">Srpski</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="pt">Português</option>
+                    <option value="ru">Русский</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中文</option>
+                </select>
+                <button id="translateBtn" class="btn-primary">Prevedi Sve Poruke</button>
+                <div id="translationResults" class="translation-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personality Modal -->
+    <div id="personalityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎭 Ličnost Bota</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="personality-grid">
+                    <button class="personality-btn" data-personality="normal">
+                        <div class="personality-emoji">🤖</div>
+                        <div class="personality-name">Normalna</div>
+                    </button>
+                    <button class="personality-btn" data-personality="humorous">
+                        <div class="personality-emoji">😄</div>
+                        <div class="personality-name">Humor</div>
+                    </button>
+                    <button class="personality-btn" data-personality="formal">
+                        <div class="personality-emoji">🎩</div>
+                        <div class="personality-name">Formalna</div>
+                    </button>
+                    <button class="personality-btn" data-personality="poetic">
+                        <div class="personality-emoji">✨</div>
+                        <div class="personality-name">Poetska</div>
+                    </button>
+                    <button class="personality-btn" data-personality="sarcastic">
+                        <div class="personality-emoji">😏</div>
+                        <div class="personality-name">Sarkastična</div>
+                    </button>
+                    <button class="personality-btn" data-personality="motivational">
+                        <div class="personality-emoji">💪</div>
+                        <div class="personality-name">Motivacijska</div>
+                    </button>
+                </div>
+                <div id="personalityInfo" class="personality-info"></div>
+            </div>
+        </div>
+    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
