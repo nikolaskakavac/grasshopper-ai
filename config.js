@@ -1,10 +1,13 @@
 /**
  * Configuration Loader
  * Učitava environment varijable iz .env.local fajla
+ * 
+ * ⚠️ SECURITY: API_KEY se NIKADA ne sme hardkodirati!
+ * Koristi .env.local fajl koji je u .gitignore
  */
 
 let config = {
-    apiKey: 'AIzaSyD7pGwXgEAwQxq5878JKIVQt4-GWGCZ8pY',
+    apiKey: '', // Učitava se iz .env.local - NEMOJ HARDKODIRATI KLJUČ!
     model: 'gemini-2.5-flash'
 };
 
