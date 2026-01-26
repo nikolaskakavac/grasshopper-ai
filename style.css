@@ -325,27 +325,28 @@ body.dark-mode .bot-message .message-content {
 }
 
 .input-container {
-    padding: 14px 12px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
-    backdrop-filter: blur(10px);
-    border-top: 2px solid rgba(74, 124, 44, 0.1);
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    padding: 16px 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 250, 0.98) 100%);
+    backdrop-filter: blur(15px);
+    border-top: 3px solid rgba(74, 124, 44, 0.15);
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 body.dark-mode .input-container {
-    background: linear-gradient(135deg, rgba(42, 42, 42, 0.95) 0%, rgba(32, 32, 32, 0.95) 100%);
-    border-top: 2px solid rgba(90, 140, 58, 0.2);
+    background: linear-gradient(135deg, rgba(42, 42, 42, 0.98) 0%, rgba(32, 32, 32, 0.98) 100%);
+    border-top: 3px solid rgba(90, 140, 58, 0.3);
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .input-btn, .send-btn {
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 50px;
     padding: 0;
     border-radius: 50%;
-    font-size: 20px;
+    font-size: 24px;
     border: none;
     cursor: pointer;
     background: linear-gradient(135deg, #4a7c2c 0%, #5a8c3a 100%);
@@ -353,44 +354,62 @@ body.dark-mode .input-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(74, 124, 44, 0.3);
-    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 6px 18px rgba(74, 124, 44, 0.35);
+    font-weight: 700;
     flex-shrink: 0;
 }
 
 .input-btn:hover, .send-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(74, 124, 44, 0.4);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 8px 28px rgba(74, 124, 44, 0.45);
 }
 
 .input-btn:active, .send-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
+    box-shadow: 0 2px 8px rgba(74, 124, 44, 0.3);
 }
 
 #messageInput {
     flex: 1;
-    padding: 10px 14px;
-    font-size: 14px;
-    border-radius: 20px;
-    height: 42px;
-    border: 2px solid rgba(74, 124, 44, 0.2);
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 28px;
+    height: 56px;
+    border: 2.5px solid rgba(74, 124, 44, 0.25);
     background: white;
     color: #1a1a1a;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba(74, 124, 44, 0.12);
 }
 
 body.dark-mode #messageInput {
-    background: #333;
+    background: #2a2a2a;
     color: #f0f0f0;
-    border: 2px solid rgba(90, 140, 58, 0.3);
+    border: 2.5px solid rgba(90, 140, 58, 0.35);
+}
+
+#messageInput::placeholder {
+    color: rgba(26, 26, 26, 0.6);
+    font-weight: 500;
+    font-size: 15px;
+}
+
+body.dark-mode #messageInput::placeholder {
+    color: rgba(240, 240, 240, 0.5);
 }
 
 #messageInput:focus {
     outline: none;
     border-color: #4a7c2c;
-    box-shadow: 0 0 0 3px rgba(74, 124, 44, 0.1);
+    box-shadow: 0 0 0 4px rgba(74, 124, 44, 0.15), 0 6px 20px rgba(74, 124, 44, 0.22);
+    background: #fafbf8;
+}
+
+body.dark-mode #messageInput:focus {
+    background: #333;
+    box-shadow: 0 0 0 4px rgba(160, 212, 104, 0.15), 0 6px 20px rgba(160, 212, 104, 0.18);
 }
 
 /* Modal Styles */
@@ -996,6 +1015,55 @@ body.dark-mode .personality-info {
     canvas {
         border-radius: 12px;
         margin-bottom: 12px;
+    }
+    
+    /* Enhanced Input Container for Mobile */
+    .input-container {
+        padding: 18px 14px;
+        gap: 14px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.99) 0%, rgba(248, 249, 250, 0.99) 100%);
+        border-top: 3px solid #4a7c2c;
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    body.dark-mode .input-container {
+        background: linear-gradient(135deg, rgba(42, 42, 42, 0.99) 0%, rgba(32, 32, 32, 0.99) 100%);
+        border-top: 3px solid #5a8c3a;
+    }
+    
+    /* Enhanced Input Buttons for Mobile */
+    .input-btn, .send-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 26px;
+        border-radius: 50%;
+        box-shadow: 0 8px 24px rgba(74, 124, 44, 0.4);
+    }
+    
+    .input-btn:hover, .send-btn:hover {
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: 0 12px 32px rgba(74, 124, 44, 0.5);
+    }
+    
+    /* Enhanced Message Input for Mobile */
+    #messageInput {
+        height: 58px;
+        padding: 16px 22px;
+        font-size: 17px;
+        border-radius: 29px;
+        border: 3px solid rgba(74, 124, 44, 0.3);
+        box-shadow: 0 6px 16px rgba(74, 124, 44, 0.15);
+    }
+    
+    body.dark-mode #messageInput {
+        border: 3px solid rgba(90, 140, 58, 0.4);
+    }
+    
+    #messageInput:focus {
+        height: 58px;
+        box-shadow: 0 0 0 5px rgba(74, 124, 44, 0.2), 0 8px 24px rgba(74, 124, 44, 0.3);
+        border-color: #4a7c2c;
+        transform: translateY(-2px);
     }
     
     body::before {
