@@ -4,7 +4,7 @@
  */
 
 let config = {
-    apiKey: 'AIzaSyCscm2cNoVYd7aAujKav5RX4mUpzTQvZUk',
+    apiKey: 'AIzaSyD7pGwXgEAwQxq5878JKIVQt4-GWGCZ8pY',
     model: 'gemini-2.5-flash'
 };
 

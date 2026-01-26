@@ -1,5 +1,5 @@
 // API Configuration - koristi config.js
-const API_KEY = config.apiKey || 'AIzaSyCscm2cNoVYd7aAujKav5RX4mUpzTQvZUk';
+const API_KEY = config.apiKey || 'AIzaSyD7pGwXgEAwQxq5878JKIVQt4-GWGCZ8pY';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.5-flash'}:generateContent`;
 
 const chatBox = document.getElementById('chatBox');
