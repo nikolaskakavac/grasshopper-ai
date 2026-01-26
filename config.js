@@ -7,38 +7,55 @@
  */
 
 let config = {
-    apiKey: '', // Učitava se iz .env.local - NEMOJ HARDKODIRATI KLJUČ!
+    apiKey: '', 
     model: 'gemini-2.5-flash'
 };
 
 // Učitaj .env.local sinhronizovano pre nego što se ostatak koda pokrene
 async function loadEnvConfig() {
     try {
-        const response = await fetch('.env.local');
-        if (!response.ok) throw new Error('.env.local not found');
+        // Pokušaj sa različitim putanjama
+        let response = await fetch('.env.local');
         
-        const text = await response.text();
-        const lines = text.split('\n');
-        
-        lines.forEach(line => {
-            line = line.trim();
-            if (line && !line.startsWith('#')) {
-                const [key, value] = line.split('=');
-                if (key && value) {
-                    const normalizedKey = key.replace('VITE_GEMINI_', '').toLowerCase();
-                    config[normalizedKey + '_key'] = value.trim();
-                }
-            }
-        });
-        
-        if (config.api_key) {
-            config.apiKey = config.api_key;
+        // Ako ne radi, pokušaj sa drugom putanjom
+        if (!response.ok) {
+            response = await fetch('./.env.local');
         }
-        console.log('✅ Config učitan iz .env.local');
+        
+        // Ako i dalje ne radi, pokušaj sa ../ 
+        if (!response.ok) {
+            response = await fetch('/.env.local');
+        }
+        
+        if (response.ok) {
+            const text = await response.text();
+            const lines = text.split('\n');
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (line && !line.startsWith('#')) {
+                    const [key, value] = line.split('=');
+                    if (key && value) {
+                        const cleanKey = key.replace('VITE_GEMINI_', '').toLowerCase();
+                        if (cleanKey === 'api_key') {
+                            config.apiKey = value.trim();
+                        } else if (cleanKey === 'model') {
+                            config.model = value.trim();
+                        }
+                    }
+                }
+            });
+            
+            if (config.apiKey) {
+                console.log('✅ Config učitan iz .env.local - API ključ dostupan');
+            }
+        } else {
+            console.warn('⚠️ .env.local nije pronađen. Proveri da li fajl postoji i da je server pravilno konfiguriran.');
+        }
     } catch (error) {
-        console.warn('⚠️ .env.local nije pronađen. Koristi default config.');
+        console.warn('⚠️ Greška pri učitavanju .env.local:', error.message);
     }
 }
 
-// Ovo će biti pozvan iz HTML-a pre nego što se script.js pokrene
-// (čeka se što je moguće brže)
+// Učitaj odmah
+loadEnvConfig();

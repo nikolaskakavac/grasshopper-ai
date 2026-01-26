@@ -273,8 +273,14 @@
 </div>
     <script src="config.js"></script>
     <script>
-        // Odmah učitaj config pre nego što se script.js pokrene
-        loadEnvConfig();
+        // Odmah učitaj config i prikaži debug info
+        console.log('🔍 Pokušavam da učitam .env.local...');
+        loadEnvConfig().then(() => {
+            console.log('📋 Config objekat:', {
+                apiKey: config.apiKey ? '✅ Dostupan' : '❌ Nije dostupan',
+                model: config.model
+            });
+        });
     </script>
     <script src="script.js"></script>
 </body>
