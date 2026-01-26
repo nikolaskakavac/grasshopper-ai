@@ -360,17 +360,21 @@ body.dark-mode .input-container {
     font-weight: 700;
     flex-shrink: 0;
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .input-btn {
     width: 56px;
     padding: 0;
     border-radius: 50%;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .input-btn:hover, .send-btn:hover {
-    transform: translateY(-3px) scale(1.08);
-    box-shadow: 0 8px 28px rgba(74, 124, 44, 0.45);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 10px 32px rgba(74, 124, 44, 0.5);
 }
 
 .input-btn:active, .send-btn:active {
@@ -1007,18 +1011,20 @@ body.dark-mode .personality-info {
     }
     
     .send-btn {
-        min-width: 90px;
-        padding: 0 24px;
-        height: 62px;
-        font-size: 18px;
-        font-weight: 800;
-        border-radius: 31px;
-        box-shadow: 0 8px 24px rgba(74, 124, 44, 0.4);
+        min-width: 110px;
+        padding: 0 28px;
+        height: 72px;
+        font-size: 22px;
+        font-weight: 900;
+        border-radius: 36px;
+        box-shadow: 0 10px 32px rgba(74, 124, 44, 0.55);
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     .input-btn:hover, .send-btn:hover {
-        transform: translateY(-4px) scale(1.12);
-        box-shadow: 0 12px 32px rgba(74, 124, 44, 0.5);
+        transform: translateY(-5px) scale(1.15);
+        box-shadow: 0 14px 40px rgba(74, 124, 44, 0.6);
     }
     
     /* Enhanced User Input for Mobile */
