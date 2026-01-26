@@ -1012,13 +1012,13 @@ body.dark-mode .personality-info {
     }
     
     .send-btn {
-        min-width: 110px;
-        padding: 0 28px;
-        height: 72px;
-        font-size: 24px;
+        min-width: 70px;
+        padding: 0 16px;
+        height: 62px;
+        font-size: 26px;
         font-weight: 900;
-        border-radius: 36px;
-        box-shadow: 0 10px 32px rgba(74, 124, 44, 0.55);
+        border-radius: 31px;
+        box-shadow: 0 8px 24px rgba(74, 124, 44, 0.4);
         text-transform: none;
         letter-spacing: 0;
         line-height: 1;
