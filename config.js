@@ -11,7 +11,7 @@ let config = {
     model: 'gemini-2.5-flash'
 };
 
-// Pokušaj učitati .env.local fajl
+// Učitaj .env.local sinhronizovano pre nego što se ostatak koda pokrene
 async function loadEnvConfig() {
     try {
         const response = await fetch('.env.local');
@@ -34,10 +34,11 @@ async function loadEnvConfig() {
         if (config.api_key) {
             config.apiKey = config.api_key;
         }
+        console.log('✅ Config učitan iz .env.local');
     } catch (error) {
-        console.log('ℹ️ Using default config. To use custom config, create .env.local file.');
+        console.warn('⚠️ .env.local nije pronađen. Koristi default config.');
     }
 }
 
-// Učitaj config pre nego što se script.js pokrene
-loadEnvConfig().catch(console.error);
+// Ovo će biti pozvan iz HTML-a pre nego što se script.js pokrene
+// (čeka se što je moguće brže)

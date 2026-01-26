@@ -1,8 +1,29 @@
+// ===== WAIT FOR CONFIG =====
+async function waitForConfig() {
+    const maxAttempts = 50; // 5 sekundi
+    let attempts = 0;
+    while (!config || !config.apiKey || config.apiKey.trim() === '') {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+        if (attempts >= maxAttempts) {
+            console.error('❌ Config nije učitan nakon 5 sekundi');
+            break;
+        }
+    }
+}
+
 // ===== API CONFIGURATION =====
 // ⚠️ SECURITY: NIKADA ne hardkoduj API ključ u javnom kodu!
 // Koristi .env.local fajl koji je u .gitignore
-const API_KEY = config.apiKey || ''; // Učitava se iz config.js koji učitava .env.local
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.5-flash'}:generateContent`;
+let API_KEY = '';
+let API_URL = '';
+
+// Inicijalizuj API na osnovu učitanog configa
+function initializeAPI() {
+    API_KEY = config.apiKey || '';
+    API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.5-flash'}:generateContent`;
+    console.log('API inicijalizovan:', { hasKey: !!API_KEY, model: config.model });
+}
 
 // ===== EMOJI PICKER DATA =====
 const emojis = [
@@ -73,7 +94,13 @@ const personalities = {
 };
 
 // ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Čekaj da se config učita
+    await waitForConfig();
+    
+    // Inicijalizuj API
+    initializeAPI();
+    
     if (darkMode) enableDarkMode();
     setupEventListeners();
     updateStats();
