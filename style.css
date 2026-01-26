@@ -362,6 +362,7 @@ body.dark-mode .input-container {
     white-space: nowrap;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    line-height: 1;
 }
 
 .input-btn {
@@ -1014,12 +1015,13 @@ body.dark-mode .personality-info {
         min-width: 110px;
         padding: 0 28px;
         height: 72px;
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 900;
         border-radius: 36px;
         box-shadow: 0 10px 32px rgba(74, 124, 44, 0.55);
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        text-transform: none;
+        letter-spacing: 0;
+        line-height: 1;
     }
     
     .input-btn:hover, .send-btn:hover {
