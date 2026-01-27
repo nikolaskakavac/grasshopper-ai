@@ -1,22 +1,22 @@
 /**
  * Configuration Loader
  * Učitava environment varijable iz .env.local fajla
- * Za GitHub Pages: API_KEY je ubačen kroz GitHub Actions
+ * Za GitHub Pages: API_KEY je ubačen kroz index.html (od GitHub Actions)
  * 
  * ⚠️ SECURITY: API_KEY se nikada ne sme hardkodirati!
  * Koristi .env.local fajl koji je u .gitignore
  */
 
 let config = {
-    apiKey: '', 
+    apiKey: window.API_KEY_GITHUB ? window.API_KEY_GITHUB : '', 
     model: 'gemini-2.5-flash'
 };
 
 // Učitaj .env.local (fallback za lokalnu development)
 async function loadEnvConfig() {
     try {
-        // Ako je config.apiKey već postavljen (od GitHub Actions), preskočimo
-        if (config.apiKey && config.apiKey.trim()) {
+        // Ako je config.apiKey već postavljen (od GitHub Actions kroz index.html), preskočimo
+        if (config.apiKey && config.apiKey !== 'GITHUB_API_KEY_PLACEHOLDER' && config.apiKey.trim()) {
             console.log('✅ Config već ima API_KEY (GitHub Actions build)');
             return;
         }
@@ -62,7 +62,9 @@ async function waitForConfig() {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
     
-    if (!config.apiKey) {
+    if (config.apiKey) {
+        console.log('✅ Config je dostupan - API ključ:', config.apiKey.substring(0, 10) + '...');
+    } else {
         console.warn('⚠️ Config nije učitan u roku od 20 sekundi');
     }
 }
