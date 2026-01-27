@@ -1,9 +1,10 @@
 /**
  * Configuration Loader
- * Učitava environment varijable iz .env.local fajla
+ * Učitava environment varijable iz .env.local fajla (ili GitHub Actions build)
  * 
- * ⚠️ SECURITY: API_KEY se NIKADA ne sme hardkodirati!
- * Koristi .env.local fajl koji je u .gitignore
+ * ⚠️ SECURITY: API_KEY se nikada ne sme hardkodirati u source code-u!
+ * - Lokalno: Koristi .env.local fajl koji je u .gitignore
+ * - GitHub Pages: GitHub Actions ubacuje API_KEY iz Secrets
  */
 
 let config = {
@@ -14,6 +15,12 @@ let config = {
 // Učitaj .env.local sinhronizovano pre nego što se ostatak koda pokrene
 async function loadEnvConfig() {
     try {
+        // Prvo proveri da li je config već postavljen (od GitHub Actions)
+        if (config.apiKey) {
+            console.log('✅ Config već učitan (GitHub Actions build)');
+            return;
+        }
+        
         // Pokušaj sa različitim putanjama (tiho preskačemo 404-e)
         const paths = ['.env.local', './.env.local', '/.env.local'];
         let response = null;
@@ -50,32 +57,13 @@ async function loadEnvConfig() {
             });
             
             if (config.apiKey) {
-                console.log('✅ Config učitan iz .env.local - API ključ dostupan');
-                // Sačuvaj u localStorage za sledeći put
-                localStorage.setItem('gemini_api_key', config.apiKey);
-            }
-        } else {
-            // Ako .env.local ne postoji, pokušaj iz localStorage (ovo je OK za GitHub Pages)
-            const savedKey = localStorage.getItem('gemini_api_key');
-            if (savedKey) {
-                config.apiKey = savedKey;
-                console.log('✅ Korišćen sačuvani API ključ iz localStorage');
-            } else {
-                config.apiKey = '❌ Nije dostupan';
-                console.warn('⚠️ .env.local nije pronađen i nema sačuvanog ključa u localStorage');
+                console.log('✅ Config učitan iz .env.local');
             }
         }
     } catch (error) {
-        // Tiho preskačemo greške - .env.local ne postoji na GitHub Pages (očekivano)
-        const savedKey = localStorage.getItem('gemini_api_key');
-        if (savedKey) {
-            config.apiKey = savedKey;
-            console.log('✅ Korišćen sačuvani API ključ iz localStorage (fallback)');
-        } else {
-            config.apiKey = '❌ Nije dostupan';
-            console.warn('⚠️ .env.local nije pronađen i nema sačuvanog ključa u localStorage');
-        }
+        console.log('ℹ️ .env.local nije dostupan (GitHub Pages - expected)');
     }
+}
 }
 
 // Učitaj odmah

@@ -1,0 +1,28 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Create config.js with API key from secret
+        run: |
+          echo "let config = { apiKey: '${{ secrets.GEMINI_API_KEY }}', model: 'gemini-2.5-flash' };" > config.js
+          echo "async function loadEnvConfig() { console.log('✅ API key loaded from GitHub Actions build'); }" >> config.js
+          echo "loadEnvConfig();" >> config.js
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
