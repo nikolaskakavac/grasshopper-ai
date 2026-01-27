@@ -317,7 +317,8 @@ async function sendMessage() {
         removeTyping();
         
         console.log('📥 API Odgovor status:', response.status);
-        console.log('📥 API Odgovor data:', JSON.stringify(data, null, 2));
+        console.log('📥 API Odgovor KOMPLETAN:', data);
+        console.log('📥 API Error object:', JSON.stringify(data.error, null, 2));
         
         if (!response.ok) {
             const errorMsg = data.error?.message || data.error?.details || JSON.stringify(data.error) || 'Nepoznata greška';
