@@ -15,11 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       
-      - name: Create config.js with API key from secret
+      - name: Create .env.local with API key from secret
         run: |
-          echo "let config = { apiKey: '${{ secrets.GEMINI_API_KEY }}', model: 'gemini-2.5-flash' };" > config.js
-          echo "async function loadEnvConfig() { console.log('✅ API key loaded from GitHub Actions build'); }" >> config.js
-          echo "loadEnvConfig();" >> config.js
+          echo "VITE_GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env.local
+          echo "VITE_GEMINI_MODEL=gemini-2.5-flash" >> .env.local
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
