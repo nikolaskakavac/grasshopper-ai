@@ -292,6 +292,9 @@ async function sendMessage() {
         const personalityPrompt = personalities[currentPersonality].prompt;
         const fullPrompt = personalityPrompt + message;
         
+        console.log('🔑 API Ključ (first 20 chars):', API_KEY.substring(0, 20) + '...');
+        console.log('📤 Pozivam API sa URL:', API_URL);
+        
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
@@ -308,9 +311,13 @@ async function sendMessage() {
         const data = await response.json();
         removeTyping();
         
+        console.log('📥 API Odgovor status:', response.status);
+        console.log('📥 API Odgovor data:', JSON.stringify(data, null, 2));
+        
         if (!response.ok) {
-            console.error('API Error:', response.status, data);
-            addMessage('❌ Greška: ' + (data.error?.message || 'API ne odgovara ispravno'), false);
+            const errorMsg = data.error?.message || data.error?.details || JSON.stringify(data.error) || 'Nepoznata greška';
+            console.error('❌ API Error:', response.status, errorMsg);
+            addMessage('❌ Greška: ' + errorMsg, false);
             return;
         }
         
@@ -325,7 +332,7 @@ async function sendMessage() {
         
     } catch (error) {
         removeTyping();
-        console.error('Fetch Error:', error);
+        console.error('❌ Fetch Error:', error);
         addMessage('❌ Greška konekcije: ' + error.message, false);
     }
 }
