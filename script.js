@@ -113,6 +113,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Inicijalizuj API
     initializeAPI();
     
+    // Provera da li je API ključ dostupan
+    if (!API_KEY || API_KEY.trim() === '') {
+        showSetupModal();
+    }
+    
     if (darkMode) enableDarkMode();
     setupEventListeners();
     updateStats();
@@ -125,6 +130,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ===== EVENT LISTENERS =====
 function setupEventListeners() {
+    // Setup modal
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+    
+    if (saveApiKeyBtn) {
+        saveApiKeyBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (!key) {
+                alert('❌ Molim unesite API ključ!');
+                return;
+            }
+            
+            // Sačuvaj ključ
+            config.apiKey = key;
+            API_KEY = key;
+            localStorage.setItem('gemini_api_key', key);
+            
+            // Zatvori modal
+            document.getElementById('setupModal').classList.remove('show');
+            
+            // Reload konfiguraciju
+            initializeAPI();
+            
+            showNotification('✅ API ključ sačuvan! Aplikacija je spremna.');
+            console.log('✅ API ključ je sačuvan iz Setup modal-a');
+        });
+        
+        // Enter key
+        if (apiKeyInput) {
+            apiKeyInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') saveApiKeyBtn.click();
+            });
+        }
+    }
+    
     document.getElementById('historyBtn').addEventListener('click', openHistoryModal);
 document.getElementById('newSessionBtn').addEventListener('click', createNewSession);
 
@@ -195,6 +235,25 @@ document.getElementById('newSessionBtn').addEventListener('click', createNewSess
             showNotification('📋 Poruka kopirana!');
         }
     });
+}
+
+// ===== SETUP MODAL =====
+function showSetupModal() {
+    const modal = document.getElementById('setupModal');
+    if (modal) {
+        modal.classList.add('show');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        if (apiKeyInput) {
+            apiKeyInput.focus();
+        }
+    }
+}
+
+function closeSetupModal() {
+    const modal = document.getElementById('setupModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 // ===== WELCOME MESSAGE =====
