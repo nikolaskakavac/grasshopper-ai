@@ -60,8 +60,10 @@ async function loadEnvConfig() {
             if (savedKey) {
                 config.apiKey = savedKey;
                 console.log('✅ Korišćen sačuvani API ključ iz localStorage');
+            } else {
+                config.apiKey = '❌ Nije dostupan';
+                console.warn('⚠️ .env.local nije pronađen i nema sačuvanog ključa u localStorage');
             }
-            // Bez upozorenja - .env.local ne postoji na GitHub Pages (očekivano)
         }
     } catch (error) {
         // Tiho preskačemo greške - .env.local ne postoji na GitHub Pages (očekivano)
@@ -69,6 +71,9 @@ async function loadEnvConfig() {
         if (savedKey) {
             config.apiKey = savedKey;
             console.log('✅ Korišćen sačuvani API ključ iz localStorage (fallback)');
+        } else {
+            config.apiKey = '❌ Nije dostupan';
+            console.warn('⚠️ .env.local nije pronađen i nema sačuvanog ključa u localStorage');
         }
     }
 }

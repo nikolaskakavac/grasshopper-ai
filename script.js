@@ -35,6 +35,27 @@ function initializeAPI() {
     API_KEY = config.apiKey || '';
     API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.5-flash'}:generateContent`;
     console.log('API inicijalizovan:', { hasKey: !!API_KEY, model: config.model });
+    
+    // Prikaži Setup banner ako nema API ključa
+    if (!API_KEY || API_KEY.trim() === '') {
+        showSetupBanner();
+    } else {
+        hideSetupBanner();
+    }
+}
+
+function showSetupBanner() {
+    const setupBanner = document.getElementById('setupBanner');
+    if (setupBanner) {
+        setupBanner.classList.remove('hidden');
+    }
+}
+
+function hideSetupBanner() {
+    const setupBanner = document.getElementById('setupBanner');
+    if (setupBanner) {
+        setupBanner.classList.add('hidden');
+    }
 }
 
 // ===== EMOJI PICKER DATA =====
@@ -125,6 +146,50 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ===== EVENT LISTENERS =====
 function setupEventListeners() {
+    // Setup banner
+    const setupBanner = document.getElementById('setupBanner');
+    const setupApiKeyInput = document.getElementById('setupApiKeyInput');
+    const setupSaveBtn = document.getElementById('setupSaveBtn');
+    const setupBannerClose = document.getElementById('setupBannerClose');
+    
+    if (setupSaveBtn) {
+        setupSaveBtn.addEventListener('click', () => {
+            const key = setupApiKeyInput.value.trim();
+            if (!key) {
+                alert('❌ Molim unesite API ključ!');
+                return;
+            }
+            
+            // Sačuvaj ključ
+            config.apiKey = key;
+            API_KEY = key;
+            localStorage.setItem('gemini_api_key', key);
+            
+            // Zatvori banner
+            setupBanner.classList.add('hidden');
+            
+            // Reload konfiguraciju
+            initializeAPI();
+            
+            showNotification('✅ API ključ sačuvan! Aplikacija je spremna.');
+            console.log('✅ API ključ je sačuvan iz Setup banner-a');
+        });
+        
+        // Enter key
+        if (setupApiKeyInput) {
+            setupApiKeyInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') setupSaveBtn.click();
+            });
+        }
+    }
+    
+    // Close banner
+    if (setupBannerClose) {
+        setupBannerClose.addEventListener('click', () => {
+            setupBanner.classList.add('hidden');
+        });
+    }
+    
     document.getElementById('historyBtn').addEventListener('click', openHistoryModal);
 document.getElementById('newSessionBtn').addEventListener('click', createNewSession);
 
@@ -303,8 +368,9 @@ async function sendMessage() {
     if (!message) return;
     
     // Provera da li je API ključ učitan
-    if (!API_KEY || API_KEY.trim() === '') {
-        addMessage('❌ Greška: API ključ nije konfiguriran. Proveri .env.local fajl!', false);
+    if (!API_KEY || API_KEY.trim() === '' || API_KEY === '❌ Nije dostupan') {
+        showSetupBanner();
+        showNotification('🔑 Molim unesite API ključ da bi nastavili');
         return;
     }
     
