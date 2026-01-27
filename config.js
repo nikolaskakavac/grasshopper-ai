@@ -45,5 +45,21 @@ async function loadEnvConfig() {
     }
 }
 
+// Čekaj da se config učita (do 20 sekundi)
+async function waitForConfig() {
+    const maxWait = 20000; // 20 sekundi
+    const startTime = Date.now();
+    
+    while (!config.apiKey && (Date.now() - startTime) < maxWait) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    if (!config.apiKey) {
+        console.warn('⚠️ Config nije učitan u roku od 20 sekundi');
+    }
+}
+
 // Učitaj odmah
-loadEnvConfig();
+loadEnvConfig().then(() => {
+    console.log('✅ loadEnvConfig() završen');
+});
