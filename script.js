@@ -7,8 +7,13 @@ let API_URL = '';
 // Inicijalizuj API na osnovu učitanog configa
 function initializeAPI() {
     API_KEY = config.apiKey || '';
-    API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.5-flash'}:generateContent`;
-    console.log('API inicijalizovan:', { hasKey: !!API_KEY, model: config.model });
+    API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent`;
+    console.log('🔧 API inicijalizovan:', { 
+        hasKey: !!API_KEY, 
+        keyPreview: API_KEY ? API_KEY.substring(0, 10) + '...' : 'NEMA',
+        model: config.model,
+        fullUrl: API_URL 
+    });
 }
 
 // ===== EMOJI PICKER DATA =====
