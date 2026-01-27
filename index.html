@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🦗 Grasshopper AI - by Skale</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Modern Header with Branding -->
+        <div class="chat-header">
+            <div class="header-top">
+                <div class="brand-section">
+                    <div class="avatar-glow">
+                        <span class="avatar-emoji">🦗</span>
+                    </div>
+                    <div class="brand-info">
+                        <h2>Grasshopper AI</h2>
+                        <p class="brand-tagline">by SkaleDigitals</p>
+                    </div>
+                </div>
+                <div class="header-buttons">
+                    <button class="header-btn" id="voiceBtn" title="Voice Input">
+        <i class="fas fa-microphone"></i>
+    </button>
+    <button class="header-btn" id="historyBtn" title="History">
+        <i class="fas fa-history"></i>
+    </button>
+    <button class="header-btn" id="personalityBtn" title="Personality">
+        <i class="fas fa-theater-masks"></i>
+    </button>
+                    <button class="header-btn" id="voiceBtn" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="header-btn" id="personalityBtn" title="Personality">
+                        <i class="fas fa-theater-masks"></i>
+                    </button>
+                    <button class="header-btn" id="searchBtn" title="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="header-btn" id="gameBtn" title="Play Game">
+                        <i class="fas fa-gamepad"></i>
+                    </button>
+                    <button class="header-btn" id="statsBtn" title="Stats">
+                        <i class="fas fa-chart-line"></i>
+                    </button>
+                    <button class="header-btn" id="darkModeBtn" title="Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="header-btn" id="clearBtn" title="Clear Chat">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <i class="fas fa-comments"></i>
+                    <span id="messageCount">1</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="chatTime">0s</span>
+                </div>
+                <div class="stat-item personality-indicator">
+                    <i class="fas fa-smile"></i>
+                    <span id="currentPersonality">Normal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Box with Typing Indicator -->
+        <div class="chat-box" id="chatBox">
+            <div class="message bot-message welcome-message">
+                <div class="message-avatar">🦗</div>
+                <div class="message-content">
+                    <strong>Zdravo! 👋</strong><br>
+                    Ja sam Grasshopper AI kreiran od strane Skaleta. Kako mogu da ti pomognem danas?
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Input with Floating Actions -->
+        <div class="input-container">
+            <button class="input-btn emoji-btn" id="emojiBtn" title="Emoji">
+                😊
+            </button>
+            <input 
+                type="text" 
+                id="userInput" 
+                placeholder="Upiši poruku..."
+                autocomplete="off"
+            >
+            <button class="send-btn" id="sendBtn" title="Send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals (ostaje isto, ali sa Font Awesome ikonama) -->
+    <div class="modal" id="statsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-bar"></i> Statistika Chata</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-comments stat-icon"></i>
+                        <div class="stat-value" id="statMessages">0</div>
+                        <div class="stat-label">Poruke</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user stat-icon"></i>
+                        <div class="stat-value" id="statUserMessages">0</div>
+                        <div class="stat-label">Tvoje</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-robot stat-icon"></i>
+                        <div class="stat-value" id="statBotMessages">0</div>
+                        <div class="stat-label">Bot</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock stat-icon"></i>
+                        <div class="stat-value" id="statChatTime">0s</div>
+                        <div class="stat-label">Vreme</div>
+                    </div>
+                </div>
+                <div class="stat-info">
+                    <i class="fas fa-text-width"></i>
+                    Prosečna dužina: <strong id="statAvgLength">0</strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="downloadBtn">
+                    <i class="fas fa-download"></i> Preuzmi Chat
+                </button>
+                <button class="btn-primary" id="copyBtn">
+                    <i class="fas fa-copy"></i> Kopiraj Sve
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="modal modal-game" id="gameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-gamepad"></i> Igra</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body game-body">
+                <div class="game-select">
+                    <button class="game-select-btn active" id="selectJump" data-game="jump">
+                        <i class="fas fa-arrow-down"></i> Jump
+                    </button>
+                    <button class="game-select-btn" id="selectFlappy" data-game="flappy">
+                        <i class="fas fa-kite"></i> Flappy
+                    </button>
+                </div>
+                <div id="gameContainer">
+                    <canvas id="gameCanvas"></canvas>
+                </div>
+                <div class="game-controls">
+                    <button id="gameStartBtn">Počni Igru</button>
+                    <div id="gameScore">Score: 0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-search"></i> Pretraga</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchInput" class="search-input" placeholder="Pretraži poruke...">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translator Modal -->
+    <div class="modal" id="translatorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-language"></i> Prevodilac</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <select id="translatorLang" class="translator-select">
+                    <option value="en">English</option>
+                    <option value="sr" selected>Srpski</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                </select>
+                <button class="btn-primary" id="translateBtn">
+                    <i class="fas fa-exchange-alt"></i> Prevedi Sve
+                </button>
+                <div id="translationResults" class="translation-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personality Modal -->
+    <div class="modal" id="personalityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-theater-masks"></i> Ličnost Bota</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="personality-grid">
+                    <button class="personality-btn active" data-personality="normal">
+                        <div class="personality-emoji">🤖</div>
+                        <div class="personality-name">Normalna</div>
+                    </button>
+                    <button class="personality-btn" data-personality="humorous">
+                        <div class="personality-emoji">😄</div>
+                        <div class="personality-name">Humor</div>
+                    </button>
+                    <button class="personality-btn" data-personality="formal">
+                        <div class="personality-emoji">🎩</div>
+                        <div class="personality-name">Formalna</div>
+                    </button>
+                    <button class="personality-btn" data-personality="poetic">
+                        <div class="personality-emoji">✨</div>
+                        <div class="personality-name">Poetska</div>
+                    </button>
+                    <button class="personality-btn" data-personality="sarcastic">
+                        <div class="personality-emoji">😏</div>
+                        <div class="personality-name">Sarkastična</div>
+                    </button>
+                    <button class="personality-btn" data-personality="motivational">
+                        <div class="personality-emoji">💪</div>
+                        <div class="personality-name">Motivacijska</div>
+                    </button>
+                </div>
+                <div class="personality-info" id="personalityInfo">
+                    Izaberi personalnost za bot 👆
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- History Modal -->
+<div class="modal" id="historyModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-history"></i> Chat History</h3>
+            <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="history-info">
+                <i class="fas fa-info-circle"></i>
+                Sve sesije se čuvaju lokalno u tvom browser-u
+            </div>
+            <div id="historySessions" class="history-sessions">
+                <!-- Sessions će biti ovde -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" id="newSessionBtn">
+                <i class="fas fa-plus"></i> Nova Sesija
+            </button>
+        </div>
+    </div>
+</div>
+    <script src="config.js"></script>
+    <script>
+        // Odmah učitaj config i prikaži debug info
+        console.log('🔍 Pokušavam da učitam .env.local...');
+        loadEnvConfig().then(() => {
+            console.log('📋 Config objekat:', {
+                apiKey: config.apiKey ? '✅ Dostupan' : '❌ Nije dostupan',
+                model: config.model
+            });
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

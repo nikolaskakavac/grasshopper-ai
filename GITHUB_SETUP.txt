@@ -1,0 +1,68 @@
+UPUTSTVO ZA UPLOAD NA GITHUB
+=============================
+
+1. KREIRAJ REPOZITORIJUM NA GITHUB-U
+   - Idi na https://github.com/new
+   - Naziv: grasshopper-ai
+   - Opis: "🦗 Modern AI chatbot with Gemini integration"
+   - Postavi na Public (da bi svi videli)
+   - NE KREIRAJ README.md (već ga imamo)
+   - Klikni "Create repository"
+
+2. POVEŽИ LOKALNI REPO SA GITHUB-OM
+   Koristi komande u PowerShell-u:
+
+   # Dodaj remote (zameni yourusername sa tvojim GitHub username-om)
+   git remote add origin https://github.com/yourusername/grasshopper-ai.git
+   
+   # Preimenuј master branch u main (GitHub standard)
+   git branch -M main
+   
+   # Potisnj kod na GitHub
+   git push -u origin main
+
+3. GOTOVO!
+   Tvoj kod je sada na:
+   https://github.com/yourusername/grasshopper-ai
+
+NAPOMENE O SIGURNOSTI:
+======================
+⚠️ API KLJUČ JE IZLOŽEN!
+
+Pošto je API ključ u index.html vidljiv:
+
+A) KRATAK FIX (za razvojni stadium):
+   1. Regeneriši API ključ na Google Cloud Console
+   2. Postavi stari ključ kao disabled/deleted
+   
+B) PRAVI FIX (za produkciju):
+   1. Kreiraj backend (Flask, Node.js)
+   2. Premesti API ključ tamo
+   3. Klijent šalje zahtev na backend
+   4. Backend koristi API ključ bezbedno
+
+PRIMER KOMANDI:
+================
+
+# Proveri git status
+git status
+
+# Pokreni novim komande
+git remote -v
+
+# Vidi sve commits
+git log --oneline
+
+# Ako trebaš dodati nove fajlove:
+git add filename
+git commit -m "Opis izmene"
+git push
+
+ALTERNATIVA - GITHUB DESKTOP:
+==============================
+Ako želiš GUI umesto terminala:
+1. Preuzmi GitHub Desktop sa https://desktop.github.com
+2. Otvori file -> Add Local Repository
+3. Odaberi D:\chatbot-app
+4. File -> Publish repository
+5. Unesi kredencijale
