@@ -1,6 +1,7 @@
 /**
  * Configuration Loader
  * Učitava environment varijable iz .env.local fajla
+ * Za GitHub Pages: API_KEY je ubačen kroz GitHub Actions
  * 
  * ⚠️ SECURITY: API_KEY se nikada ne sme hardkodirati!
  * Koristi .env.local fajl koji je u .gitignore
@@ -11,9 +12,15 @@ let config = {
     model: 'gemini-2.5-flash'
 };
 
-// Učitaj .env.local
+// Učitaj .env.local (fallback za lokalnu development)
 async function loadEnvConfig() {
     try {
+        // Ako je config.apiKey već postavljen (od GitHub Actions), preskočimo
+        if (config.apiKey && config.apiKey.trim()) {
+            console.log('✅ Config već ima API_KEY (GitHub Actions build)');
+            return;
+        }
+        
         // Pokušaj da učitaš .env.local
         const response = await fetch('.env.local');
         
@@ -41,7 +48,8 @@ async function loadEnvConfig() {
             }
         }
     } catch (error) {
-        console.log('ℹ️ .env.local nije pronađen (OK za GitHub Pages)');
+        // .env.local nije pronađen - OK, može biti na GitHub Pages
+        console.log('ℹ️ .env.local nije pronađen (očekivano na GitHub Pages)');
     }
 }
 
