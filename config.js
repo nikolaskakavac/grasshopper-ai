@@ -9,7 +9,7 @@
 
 let config = {
     apiKey: window.API_KEY_GITHUB ? window.API_KEY_GITHUB : '', 
-    model: 'gemini-2.5-flash'
+    model: 'gemini-1.5-flash'
 };
 
 // Učitaj .env.local (fallback za lokalnu development)

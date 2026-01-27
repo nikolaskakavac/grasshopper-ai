@@ -24,7 +24,7 @@ jobs:
           cat > config.js << 'EOF'
           let config = {
               apiKey: '${{ secrets.GEMINI_API_KEY }}',
-              model: 'gemini-2.5-flash'
+              model: 'gemini-1.5-flash'
           };
           
           async function loadEnvConfig() {
