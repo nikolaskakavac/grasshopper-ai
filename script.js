@@ -1,13 +1,25 @@
 // ===== WAIT FOR CONFIG =====
 async function waitForConfig() {
-    const maxAttempts = 50; // 5 sekundi
+    const maxAttempts = 200; // 20 sekundi - duži timeout
     let attempts = 0;
     while (!config || !config.apiKey || config.apiKey.trim() === '') {
         await new Promise(resolve => setTimeout(resolve, 100));
         attempts++;
         if (attempts >= maxAttempts) {
-            console.error('❌ Config nije učitan nakon 5 sekundi');
+            console.error('❌ Config nije učitan nakon 20 sekundi - koristim fallback');
             break;
+        }
+    }
+    
+    // Provera nakon čekanja
+    if (config && config.apiKey && config.apiKey.trim()) {
+        console.log('✅ Config je dostupan nakon čekanja');
+    } else {
+        console.warn('⚠️ Config nije dostupan - proverim localStorage');
+        const savedKey = localStorage.getItem('gemini_api_key');
+        if (savedKey && config) {
+            config.apiKey = savedKey;
+            console.log('✅ Koristim sačuvani ključ iz localStorage');
         }
     }
 }

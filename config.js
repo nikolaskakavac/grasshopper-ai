@@ -48,12 +48,27 @@ async function loadEnvConfig() {
             
             if (config.apiKey) {
                 console.log('✅ Config učitan iz .env.local - API ključ dostupan');
+                // Sačuvaj u localStorage za sledeći put
+                localStorage.setItem('gemini_api_key', config.apiKey);
             }
         } else {
-            console.warn('⚠️ .env.local nije pronađen. Proveri da li fajl postoji i da je server pravilno konfiguriran.');
+            // Ako .env.local ne postoji, pokušaj iz localStorage
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) {
+                config.apiKey = savedKey;
+                console.log('✅ Korišćen sačuvani API ključ iz localStorage');
+            } else {
+                console.warn('⚠️ .env.local nije pronađen i nema sačuvanog ključa u localStorage');
+            }
         }
     } catch (error) {
         console.warn('⚠️ Greška pri učitavanju .env.local:', error.message);
+        // Pokušaj fallback
+        const savedKey = localStorage.getItem('gemini_api_key');
+        if (savedKey) {
+            config.apiKey = savedKey;
+            console.log('✅ Korišćen sačuvani API ključ iz localStorage (fallback)');
+        }
     }
 }
 
