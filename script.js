@@ -3,17 +3,17 @@
 // Koristi .env.local fajl koji je u .gitignore
 let API_KEY = '';
 let API_URL = '';
-let HF_MODEL = 'meta-llama/Llama-3.1-8B-Instruct';
+let GROQ_MODEL = 'llama-3.1-70b-versatile';
 
 // Inicijalizuj API na osnovu učitanog configa
 function initializeAPI() {
     API_KEY = config.apiKey || '';
-    HF_MODEL = config.model || 'meta-llama/Llama-3.1-8B-Instruct';
-    API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+    GROQ_MODEL = config.model || 'llama-3.1-70b-versatile';
+    API_URL = 'https://api.groq.com/openai/v1/chat/completions';
     console.log('🔧 API inicijalizovan:', { 
         hasKey: !!API_KEY, 
-        keyPreview: API_KEY ? 'hf_' + API_KEY.substring(3, 13) + '...' : 'NEMA',
-        model: HF_MODEL,
+        keyPreview: API_KEY ? 'gsk_' + API_KEY.substring(4, 14) + '...' : 'NEMA',
+        model: GROQ_MODEL,
         fullUrl: API_URL 
     });
 }
@@ -299,7 +299,7 @@ async function sendMessage() {
         const personalityPrompt = personalities[currentPersonality].prompt;
         const fullPrompt = personalityPrompt + message;
         
-        console.log('🔑 HF Token (first 15 chars):', API_KEY.substring(0, 15) + '...');
+        console.log('🔑 Groq Token (first 15 chars):', API_KEY.substring(0, 15) + '...');
         console.log('📤 Pozivam API sa URL:', API_URL);
         console.log('📝 Prompt:', fullPrompt.substring(0, 50) + '...');
         
@@ -310,12 +310,16 @@ async function sendMessage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                inputs: fullPrompt,
-                parameters: {
-                    max_length: 512,
-                    temperature: 0.7,
-                    top_p: 0.9
-                }
+                model: GROQ_MODEL,
+                messages: [
+                    {
+                        role: 'user',
+                        content: fullPrompt
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 1024,
+                top_p: 0.9
             })
         });
         
@@ -326,18 +330,15 @@ async function sendMessage() {
         console.log('📥 API Odgovor KOMPLETAN:', data);
         
         if (!response.ok) {
-            const errorMsg = data.error || data.message || JSON.stringify(data) || 'Nepoznata greška';
+            const errorMsg = data.error?.message || data.message || JSON.stringify(data) || 'Nepoznata greška';
             console.error('❌ API Error:', response.status, errorMsg);
             addMessage('❌ Greška: ' + errorMsg, false);
             return;
         }
         
-        // Hugging Face vraća niz odgovora
-        if (Array.isArray(data) && data.length > 0) {
-            let botResponse = data[0].generated_text || '';
-            // Ukloni prompt iz odgovora
-            if (botResponse.includes(fullPrompt)) {
-                botResponse = botResponse.replace(fullPrompt, '').trim();
+        // Groq vraća OpenAI format sa choices
+        if (data.choices && data.choices.length > 0) {
+            const botResponse = data.choices[0].message.content;
             }
             if (botResponse) {
                 addMessage(botResponse, false);

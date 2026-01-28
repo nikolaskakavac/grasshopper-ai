@@ -1,7 +1,7 @@
 let config = {
     apiKey: '',
-    model: 'meta-llama/Llama-3.1-8B-Instruct',
-    apiProvider: 'huggingface'
+    model: 'llama-3.1-70b-versatile',
+    apiProvider: 'groq'
 };
 
 async function loadEnvConfig() {

@@ -9,10 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <!-- Inline script da ubaci HF token iz GitHub Actions build-a -->
+    <!-- Inline script da ubaci Groq token iz GitHub Actions build-a -->
     <script>
-        // Ovo će biti zamenjeno sa stvarnim HF token-om tokom GitHub Actions build-a
-        window.HF_TOKEN_GITHUB = '';
+        // Ovo će biti zamenjeno sa stvarnim Groq token-om tokom GitHub Actions build-a
+        // Na lokalnom development-u, koristi token iz .env.local (preko config.js)
+        window.GROQ_API_KEY_GITHUB = '';
+        window.GROQ_MODEL_GITHUB = 'llama-3.1-70b-versatile';
     </script>
     
     <div class="container">
