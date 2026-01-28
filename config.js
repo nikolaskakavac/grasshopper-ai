@@ -1,6 +1,6 @@
 let config = {
     apiKey: '',
-    model: 'llama-3.1-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     apiProvider: 'groq'
 };
 
@@ -9,6 +9,11 @@ async function loadEnvConfig() {
 }
 
 async function waitForConfig() {
+    if (config.apiKey) {
+        console.log('✅ Config je dostupan - API ključ:', config.apiKey.substring(0, 10) + '...');
+    } else {
+        console.warn('⚠️ Config nije učitan');
+    }
     return Promise.resolve();
 }
 
