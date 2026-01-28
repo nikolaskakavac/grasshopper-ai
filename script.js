@@ -3,15 +3,17 @@
 // Koristi .env.local fajl koji je u .gitignore
 let API_KEY = '';
 let API_URL = '';
+let HF_MODEL = 'meta-llama/Llama-3.1-8B-Instruct';
 
 // Inicijalizuj API na osnovu učitanog configa
 function initializeAPI() {
     API_KEY = config.apiKey || '';
-    API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent`;
+    HF_MODEL = config.model || 'meta-llama/Llama-3.1-8B-Instruct';
+    API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
     console.log('🔧 API inicijalizovan:', { 
         hasKey: !!API_KEY, 
-        keyPreview: API_KEY ? API_KEY.substring(0, 10) + '...' : 'NEMA',
-        model: config.model,
+        keyPreview: API_KEY ? 'hf_' + API_KEY.substring(3, 13) + '...' : 'NEMA',
+        model: HF_MODEL,
         fullUrl: API_URL 
     });
 }
@@ -283,7 +285,7 @@ async function sendMessage() {
     
     // Provera da li je API ključ učitan
     if (!API_KEY || API_KEY.trim() === '' || API_KEY === '❌ Nije dostupan') {
-        addMessage('❌ Greška: API ključ nije dostupan. Kontaktiraj administratora!', false);
+        addMessage('❌ Greška: HF token nije dostupan. Kontaktiraj administratora!', false);
         return;
     }
     
@@ -297,19 +299,23 @@ async function sendMessage() {
         const personalityPrompt = personalities[currentPersonality].prompt;
         const fullPrompt = personalityPrompt + message;
         
-        console.log('🔑 API Ključ (first 20 chars):', API_KEY.substring(0, 20) + '...');
+        console.log('🔑 HF Token (first 15 chars):', API_KEY.substring(0, 15) + '...');
         console.log('📤 Pozivam API sa URL:', API_URL);
+        console.log('📝 Prompt:', fullPrompt.substring(0, 50) + '...');
         
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'x-goog-api-key': API_KEY
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: fullPrompt }]
-                }]
+                inputs: fullPrompt,
+                parameters: {
+                    max_length: 512,
+                    temperature: 0.7,
+                    top_p: 0.9
+                }
             })
         });
         
@@ -318,22 +324,30 @@ async function sendMessage() {
         
         console.log('📥 API Odgovor status:', response.status);
         console.log('📥 API Odgovor KOMPLETAN:', data);
-        console.log('📥 API Error object:', JSON.stringify(data.error, null, 2));
         
         if (!response.ok) {
-            const errorMsg = data.error?.message || data.error?.details || JSON.stringify(data.error) || 'Nepoznata greška';
+            const errorMsg = data.error || data.message || JSON.stringify(data) || 'Nepoznata greška';
             console.error('❌ API Error:', response.status, errorMsg);
             addMessage('❌ Greška: ' + errorMsg, false);
             return;
         }
         
-        if (data.candidates && data.candidates[0].content) {
-            const botResponse = data.candidates[0].content.parts[0].text;
-            addMessage(botResponse, false);
-            playNotificationSound();
+        // Hugging Face vraća niz odgovora
+        if (Array.isArray(data) && data.length > 0) {
+            let botResponse = data[0].generated_text || '';
+            // Ukloni prompt iz odgovora
+            if (botResponse.includes(fullPrompt)) {
+                botResponse = botResponse.replace(fullPrompt, '').trim();
+            }
+            if (botResponse) {
+                addMessage(botResponse, false);
+                playNotificationSound();
+            } else {
+                addMessage('⚠️ Nisam mogao da generišem odgovor. Pokušaj ponovo.', false);
+            }
         } else {
             addMessage('⚠️ Nisam mogao da generišem odgovor. Pokušaj ponovo.', false);
-            console.error('API Response:', data);
+            console.error('Neočekivani format API odgovora:', data);
         }
         
     } catch (error) {

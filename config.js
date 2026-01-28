@@ -1,29 +1,31 @@
 /**
  * Configuration Loader
  * Učitava environment varijable iz .env.local fajla
- * Za GitHub Pages: API_KEY je ubačen kroz index.html (od GitHub Actions)
+ * Za GitHub Pages: HF_TOKEN se učitava iz localStorage
  * 
- * ⚠️ SECURITY: API_KEY se nikada ne sme hardkodirati!
+ * ⚠️ SECURITY: HF_TOKEN se nikada ne sme hardkodirati u javnom kodu!
  * Koristi .env.local fajl koji je u .gitignore
  */
 
 let config = {
-    apiKey: window.API_KEY_GITHUB ? window.API_KEY_GITHUB : '', 
-    model: 'gemini-1.5-flash'
+    apiKey: '',
+    model: 'meta-llama/Llama-3.1-8B-Instruct',
+    apiProvider: 'huggingface'
 };
 
 // Učitaj .env.local (fallback za lokalnu development)
 async function loadEnvConfig() {
     try {
-        // Ako je config.apiKey već postavljen (od GitHub Actions kroz index.html), preskočimo
-        if (config.apiKey && config.apiKey !== 'GITHUB_API_KEY_PLACEHOLDER' && config.apiKey.trim()) {
-            console.log('✅ Config već ima API_KEY (GitHub Actions build)');
+        // 1. Prvo proveri localStorage (za produkciju na GitHub Pages)
+        const savedKey = localStorage.getItem('hf_token');
+        if (savedKey && savedKey.trim()) {
+            config.apiKey = savedKey;
+            console.log('✅ Config učitan iz localStorage');
             return;
         }
         
-        // Pokušaj da učitaš .env.local
+        // 2. Pokušaj da učitaš .env.local (za lokalni development)
         const response = await fetch('.env.local');
-        
         if (response.ok) {
             const text = await response.text();
             const lines = text.split('\n');
@@ -33,10 +35,9 @@ async function loadEnvConfig() {
                 if (line && !line.startsWith('#')) {
                     const [key, value] = line.split('=');
                     if (key && value) {
-                        const cleanKey = key.replace('VITE_GEMINI_', '').toLowerCase();
-                        if (cleanKey === 'api_key') {
+                        if (key === 'VITE_HF_TOKEN') {
                             config.apiKey = value.trim();
-                        } else if (cleanKey === 'model') {
+                        } else if (key === 'VITE_HF_MODEL') {
                             config.model = value.trim();
                         }
                     }
@@ -44,12 +45,35 @@ async function loadEnvConfig() {
             });
             
             if (config.apiKey) {
-                console.log('✅ Config učitan iz .env.local - API ključ dostupan');
+                console.log('✅ Config učitan iz .env.local');
+                // Sačuvaj u localStorage za sledeći put
+                localStorage.setItem('hf_token', config.apiKey);
+            }
+        } else {
+            console.log('⚠️ .env.local nije pronađen - trebam HF token');
+            // Ako je GitHub Pages, proveri window varijablu
+            if (window.HF_TOKEN_GITHUB) {
+                config.apiKey = window.HF_TOKEN_GITHUB;
+                console.log('✅ Config učitan iz GitHub Actions');
             }
         }
+        
     } catch (error) {
-        // .env.local nije pronađen - OK, može biti na GitHub Pages
         console.log('ℹ️ .env.local nije pronađen (očekivano na GitHub Pages)');
+        
+        // Fallback: Proveri GitHub Actions varijablu
+        if (window.HF_TOKEN_GITHUB) {
+            config.apiKey = window.HF_TOKEN_GITHUB;
+            console.log('✅ Koristi GitHub Actions token');
+        } else {
+            const savedKey = localStorage.getItem('hf_token');
+            if (savedKey) {
+                config.apiKey = savedKey;
+                console.log('✅ Koristi localStorage token');
+            } else {
+                console.warn('⚠️ HF token nije pronađen - dodaj ga!');
+            }
+        }
     }
 }
 
