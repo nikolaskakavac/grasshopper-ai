@@ -1,23 +1,23 @@
 /**
  * Configuration Loader
  * Učitava environment varijable iz .env.local fajla
- * Za GitHub Pages: HF_TOKEN se učitava iz localStorage
+ * Za GitHub Pages: GROQ_API_KEY se učitava iz localStorage
  * 
- * ⚠️ SECURITY: HF_TOKEN se nikada ne sme hardkodirati u javnom kodu!
+ * ⚠️ SECURITY: GROQ_API_KEY se nikada ne sme hardkodirati u javnom kodu!
  * Koristi .env.local fajl koji je u .gitignore
  */
 
 let config = {
     apiKey: '',
-    model: 'meta-llama/Llama-3.1-8B-Instruct',
-    apiProvider: 'huggingface'
+    model: 'openai/gpt-oss-120b',
+    apiProvider: 'groq'
 };
 
 // Učitaj .env.local (fallback za lokalnu development)
 async function loadEnvConfig() {
     try {
         // 1. Prvo proveri localStorage (za produkciju na GitHub Pages)
-        const savedKey = localStorage.getItem('hf_token');
+        const savedKey = localStorage.getItem('groq_token');
         if (savedKey && savedKey.trim()) {
             config.apiKey = savedKey;
             console.log('✅ Config učitan iz localStorage');
@@ -35,9 +35,9 @@ async function loadEnvConfig() {
                 if (line && !line.startsWith('#')) {
                     const [key, value] = line.split('=');
                     if (key && value) {
-                        if (key === 'VITE_HF_TOKEN') {
+                        if (key === 'VITE_GROQ_API_KEY') {
                             config.apiKey = value.trim();
-                        } else if (key === 'VITE_HF_MODEL') {
+                        } else if (key === 'VITE_GROQ_MODEL') {
                             config.model = value.trim();
                         }
                     }

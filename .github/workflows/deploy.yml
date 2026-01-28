@@ -24,7 +24,7 @@ jobs:
           cat > config.js << 'EOF'
           let config = {
               apiKey: '${{ secrets.GROQ_API_KEY }}',
-              model: 'llama-3.1-70b-versatile',
+              model: 'openai/gpt-oss-120b',
               apiProvider: 'groq'
           };
           
@@ -33,6 +33,11 @@ jobs:
           }
           
           async function waitForConfig() {
+              if (config.apiKey) {
+                  console.log('✅ Config je dostupan - API ključ:', config.apiKey.substring(0, 10) + '...');
+              } else {
+                  console.warn('⚠️ Config nije učitan');
+              }
               return Promise.resolve();
           }
           

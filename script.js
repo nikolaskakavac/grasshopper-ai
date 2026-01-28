@@ -3,12 +3,12 @@
 // Koristi .env.local fajl koji je u .gitignore
 let API_KEY = '';
 let API_URL = '';
-let GROQ_MODEL = 'llama-3.1-70b-versatile';
+let GROQ_MODEL = 'openai/gpt-oss-120b';
 
 // Inicijalizuj API na osnovu učitanog configa
 function initializeAPI() {
     API_KEY = config.apiKey || '';
-    GROQ_MODEL = config.model || 'llama-3.1-70b-versatile';
+    GROQ_MODEL = config.model || 'openai/gpt-oss-120b';
     API_URL = 'https://api.groq.com/openai/v1/chat/completions';
     console.log('🔧 API inicijalizovan:', { 
         hasKey: !!API_KEY, 
@@ -339,7 +339,6 @@ async function sendMessage() {
         // Groq vraća OpenAI format sa choices
         if (data.choices && data.choices.length > 0) {
             const botResponse = data.choices[0].message.content;
-            }
             if (botResponse) {
                 addMessage(botResponse, false);
                 playNotificationSound();
