@@ -15,17 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       
-      - name: Inject HF token into index.html
+      - name: Inject Groq token into index.html
         run: |
-          # Zameni placeholder sa stvarnim HF token-om
-          sed -i "s/GITHUB_HF_TOKEN_PLACEHOLDER/${{ secrets.HF_TOKEN }}/g" index.html
+          # Zameni placeholder sa stvarnim Groq token-om
+          sed -i "s/GITHUB_GROQ_API_KEY_PLACEHOLDER/${{ secrets.GROQ_API_KEY }}/g" index.html
           
-          # Kreiraj config.js sa HF token-om
+          # Kreiraj config.js sa Groq token-om
           cat > config.js << 'EOF'
           let config = {
-              apiKey: '${{ secrets.HF_TOKEN }}',
-              model: 'meta-llama/Llama-3.1-8B-Instruct',
-              apiProvider: 'huggingface'
+              apiKey: '${{ secrets.GROQ_API_KEY }}',
+              model: 'llama-3.1-70b-versatile',
+              apiProvider: 'groq'
           };
           
           async function loadEnvConfig() {
