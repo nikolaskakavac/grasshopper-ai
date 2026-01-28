@@ -1,6 +1,7 @@
 let config = {
-    apiKey: 'AIzaSyDvzLWGZjmZYeaQC206A2Zqt8oo37VfZoM',
-    model: 'gemini-1.5-flash'
+    apiKey: '',
+    model: 'meta-llama/Llama-3.1-8B-Instruct',
+    apiProvider: 'huggingface'
 };
 
 async function loadEnvConfig() {
